@@ -1,5 +1,6 @@
 package com.guilherme.Janus.controller;
 
+import com.guilherme.Janus.dto.TarefaDto;
 import com.guilherme.Janus.model.Tarefa;
 import com.guilherme.Janus.service.TarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class TarefaController {
     }
 
     @PostMapping("/salvar")
-    public Tarefa salvarTarefa(@RequestBody Tarefa tarefa){
-        return tarefaService.salvarTarefa(tarefa);
+    public Tarefa salvarTarefa(@RequestBody TarefaDto dto){
+        return tarefaService.salvarTarefa(dto);
     }
 
     @GetMapping("/listar")
@@ -37,6 +38,5 @@ public class TarefaController {
     public void deletarTarefa(@PathVariable Long id){
         tarefaService.deletarTarefa(id);
     }
-
 
 }

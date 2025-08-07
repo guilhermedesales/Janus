@@ -1,6 +1,9 @@
 package com.guilherme.Janus.service;
 
+import com.guilherme.Janus.dto.TarefaDto;
+import com.guilherme.Janus.model.CategoriaTarefa;
 import com.guilherme.Janus.model.Tarefa;
+import com.guilherme.Janus.repository.CategoriaTarefaRepository;
 import com.guilherme.Janus.repository.TarefaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +16,33 @@ public class TarefaService {
     @Autowired
     private final TarefaRepository tarefaRepository;
 
-    public TarefaService(TarefaRepository tarefaRepository){
+    private final CategoriaTarefaRepository categoriaTarefaRepository;
+
+
+    public TarefaService(TarefaRepository tarefaRepository, CategoriaTarefaRepository categoriaTarefaRepository){
         this.tarefaRepository = tarefaRepository;
+        this.categoriaTarefaRepository = categoriaTarefaRepository;
     }
 
-    public Tarefa salvarTarefa(Tarefa tarefa){
+    public Tarefa salvarTarefa(TarefaDto dto){
+
+        Tarefa tarefa= new Tarefa();
+
+        tarefa.setTitulo(dto.getTitulo());
+        tarefa.setDesc(dto.getDesc());
+        tarefa.setStatus(dto.getStatus());
+        tarefa.setPrioridade(dto.getPrioridade());
+        tarefa.setDt_ini(dto.getDt_ini());
+        tarefa.setDt_fim(dto.getDt_fim());
+
+        if (dto.getCategoriaId() != null) {
+            CategoriaTarefa categoriaId = categoriaTarefaRepository.findById(dto.getCategoriaId())
+                    .orElseThrow();
+            tarefa.setCategoria(categoriaId);
+        } else{
+            tarefa.setCategoria(null);
+        }
+
         return tarefaRepository.save(tarefa);
     }
 

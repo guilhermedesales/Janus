@@ -19,7 +19,7 @@ public class CategoriaTarefaController {
     }
 
     @PostMapping("/salvar")
-    public CategoriaTarefa salvarCategoriaTarefa(CategoriaTarefa categoriaTarefa){
+    public CategoriaTarefa salvarCategoriaTarefa(@RequestBody CategoriaTarefa categoriaTarefa){
         return categoriaTarefaService.salvarCategoriaTarefa(categoriaTarefa);
     }
 
@@ -29,12 +29,12 @@ public class CategoriaTarefaController {
     }
 
     @PutMapping("/atualizar")
-    public CategoriaTarefa atualizarCategoriaTarefa(Long id, CategoriaTarefa categoriaTarefaAtualizada){
+    public CategoriaTarefa atualizarCategoriaTarefa(@RequestBody Long id, CategoriaTarefa categoriaTarefaAtualizada){
         return categoriaTarefaService.atualizarCategoriaTarefa(id, categoriaTarefaAtualizada);
     }
 
     @DeleteMapping("/deletar")
-    public void deletarCategoriaTarefa(Long id){
+    public void deletarCategoriaTarefa(@RequestBody Long id){
         categoriaTarefaService.deletarCategoriaTarefa(id);
     }
 

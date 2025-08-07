@@ -1,55 +1,30 @@
-package com.guilherme.Janus.model;
+package com.guilherme.Janus.dto;
 
 import com.guilherme.Janus.model.enums.Prioridade;
 import com.guilherme.Janus.model.enums.Status;
-import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.Date;
 
-@Entity
-
-public class Tarefa {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class TarefaDto {
 
     private String titulo;
     private String desc;
-
-    @Enumerated(EnumType.STRING)
     private Status status;
-
-    @Enumerated(EnumType.STRING)
     private Prioridade prioridade;
-
     private Date dt_ini;
     private Date dt_fim;
+    private Long categoriaId;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = true)
-    private CategoriaTarefa categoria;
+    public TarefaDto(){}
 
-    public Tarefa(){}
-
-    public Tarefa(Long id, String titulo, String desc, Status status, Prioridade prioridade, Date dt_ini, Date dt_fim, CategoriaTarefa categoria) {
-        this.id = id;
+    public TarefaDto(String titulo, String desc, Status status, Prioridade prioridade, Date dt_ini, Date dt_fim, Long categoriaId) {
         this.titulo = titulo;
         this.desc = desc;
         this.status = status;
         this.prioridade = prioridade;
         this.dt_ini = dt_ini;
         this.dt_fim = dt_fim;
-        this.categoria = categoria;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.categoriaId = categoriaId;
     }
 
     public String getTitulo() {
@@ -100,11 +75,11 @@ public class Tarefa {
         this.dt_fim = dt_fim;
     }
 
-    public CategoriaTarefa getCategoria() {
-        return categoria;
+    public Long getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setCategoria(CategoriaTarefa categoria) {
-        this.categoria = categoria;
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
     }
 }
