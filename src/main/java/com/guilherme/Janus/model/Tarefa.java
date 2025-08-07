@@ -26,11 +26,13 @@ public class Tarefa {
 
     private Date dt_ini;
     private Date dt_fim;
-    private String categoria;
+
+    @ManyToOne
+    private CategoriaTarefa categoria;
 
     public Tarefa(){}
 
-    public Tarefa(Long id, String titulo, String desc, Status status, Prioridade prioridade, Date dt_ini, Date dt_fim, String categoria) {
+    public Tarefa(Long id, String titulo, String desc, Status status, Prioridade prioridade, Date dt_ini, Date dt_fim, CategoriaTarefa categoria) {
         this.id = id;
         this.titulo = titulo;
         this.desc = desc;
@@ -97,11 +99,11 @@ public class Tarefa {
         this.dt_fim = dt_fim;
     }
 
-    public String getCategoria() {
+    public CategoriaTarefa getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(CategoriaTarefa categoria) {
         this.categoria = categoria;
     }
 }
