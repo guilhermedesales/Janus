@@ -50,6 +50,10 @@ public class TarefaService {
         return tarefaRepository.findAll();
     }
 
+    public List<Tarefa> listarTarefasCategoria(Long id){
+        return tarefaRepository.findByCategoriaId(id);
+    }
+
     public Tarefa atualizarTarefa(Long id, Tarefa tarefaAtualizada){
 
         Tarefa tarefaExistente = tarefaRepository.findById(id)

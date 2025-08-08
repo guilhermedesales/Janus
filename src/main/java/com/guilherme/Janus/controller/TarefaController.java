@@ -29,6 +29,11 @@ public class TarefaController {
         return tarefaService.listarTarefas();
     }
 
+    @GetMapping("/listarTarefaCategoria/{id}")
+    public List<Tarefa> listarTarefasCategoria(@PathVariable Long id){
+        return tarefaService.listarTarefasCategoria(id);
+    }
+
     @PutMapping("/atualizar/{id}")
     public Tarefa atualizarTarefa(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizada){
         return tarefaService.atualizarTarefa(id, tarefaAtualizada);
