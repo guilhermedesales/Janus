@@ -44,4 +44,9 @@ public class TarefaController {
         tarefaService.deletarTarefa(id);
     }
 
+    @PatchMapping("/concluir/{id}")
+    public Tarefa atualizarStatusConcluido(@PathVariable Long id){
+        return tarefaService.atualizarStatusConcluido(id);
+    }
+
 }

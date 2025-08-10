@@ -1,0 +1,36 @@
+*tarefas*
+
+//crud//
+
+- adicionar tarefa;                         (x)
+- editar tarefa;                            (x)
+- excluir tarefa;                           (x)
+
+//status//
+
+- atualizar status pra concluido;           (x)
+- atualizar status pra atrasado;            (x)
+
+//filtro//
+
+- listar todas as tarefas;                  (x)
+- listar tarefas por categoria;             (x)
+- listar tarefas do dia;                    ( )
+- listar tarefas da semana;                 ( )
+- listar tarefas do mes;                    ( )
+- listar tarefas atrasadas;                 ( )
+- listar tarefas por prioridade(todos);     ( )
+
+*categorias*
+
+//crud//
+
+- adicionar categoria;                      (x)
+- editar categoria;                         (x)
+- excluir categoria;                        (x)
+
+//filtro//
+
+- listar todos as categorias;               (x) //talvez seja inutil
+- buscar uma categoria                      ( )
+-

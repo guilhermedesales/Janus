@@ -1,7 +1,7 @@
 package com.guilherme.Janus.model.enums;
 
 public enum Status {
-    PENDENTE,
+    ATRASADO,
     EM_ANDAMENTO,
     CONCLUIDO
 }
