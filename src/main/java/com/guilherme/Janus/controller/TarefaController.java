@@ -64,6 +64,7 @@ public class TarefaController {
         return tarefaService.atualizarStatusConcluido(id);
     }
 
+    // filtro de busca
     @PostMapping("/buscar")
     public List<Tarefa> filtroDeBusca(@RequestBody FiltroTarefaDto dto){
         return tarefaService.filtroDeBusca(

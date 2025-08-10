@@ -27,6 +27,7 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
                                 @Param("statusAtual") Status statusAtual);
 
 
+    // filtro de busca
     @Query("Select t from Tarefa t where " +
             "(:prioridade is Null or t.prioridade = :prioridade) and " +
             "(:categoria is null or t.categoria = :categoria) and " +

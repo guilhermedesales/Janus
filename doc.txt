@@ -15,11 +15,11 @@
 
 - listar todas as tarefas;                  (x)
 - listar tarefas por categoria;             (x)
-- listar tarefas do dia;                    ( )
-- listar tarefas da semana;                 ( )
-- listar tarefas do mes;                    ( )
-- listar tarefas atrasadas;                 ( )
-- listar tarefas por prioridade(todos);     ( )
+- listar tarefas do dia;                    (x)
+- listar tarefas da semana;                 (x)
+- listar tarefas do mes;                    (x)
+- listar tarefas atrasadas;                 (x)
+- listar tarefas por prioridade(todos);     (x)
 
 *categorias*
 

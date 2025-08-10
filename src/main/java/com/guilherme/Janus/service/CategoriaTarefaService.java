@@ -17,14 +17,17 @@ public class CategoriaTarefaService {
         this.categoriaTarefaRepository = categoriaTarefaRepository;
     }
 
+    // cria uma categoria
     public CategoriaTarefa salvarCategoriaTarefa(CategoriaTarefa categoriaTarefa){
         return categoriaTarefaRepository.save(categoriaTarefa);
     }
 
+    // mostra todas as categorias
     public List<CategoriaTarefa> listarCategoriasTarefa(){
         return categoriaTarefaRepository.findAll();
     }
 
+    // atualiza uma categoria
     public CategoriaTarefa atualizarCategoriaTarefa(Long id, CategoriaTarefa categoriaTarefaAtualizado){
         CategoriaTarefa categoriaTarefaExistente = categoriaTarefaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Categoria não Encontrada"));
@@ -35,6 +38,7 @@ public class CategoriaTarefaService {
         return categoriaTarefaRepository.save(categoriaTarefaExistente);
     }
 
+    //deleta uma categoria
     public void deletarCategoriaTarefa(Long id){
         if (!categoriaTarefaRepository.existsById(id)){
             throw new RuntimeException("Categoria não Encontrada");

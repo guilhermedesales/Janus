@@ -141,7 +141,7 @@ public class TarefaService {
         return tarefaExistente;
     }
 
-
+    // filtro de busca
     public List<Tarefa> filtroDeBusca(CategoriaTarefa categoriaTarefa, Prioridade prioridade, String tipoData, List<Status> statusSelec){
 
         LocalDate hoje = LocalDate.now();
