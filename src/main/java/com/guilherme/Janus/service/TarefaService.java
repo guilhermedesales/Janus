@@ -11,11 +11,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.guilherme.Janus.model.enums.Status.ATRASADO;
@@ -28,7 +26,6 @@ public class TarefaService {
     private final TarefaRepository tarefaRepository;
 
     private final CategoriaTarefaRepository categoriaTarefaRepository;
-
 
     public TarefaService(TarefaRepository tarefaRepository, CategoriaTarefaRepository categoriaTarefaRepository){
         this.tarefaRepository = tarefaRepository;

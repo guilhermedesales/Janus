@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Janus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="img/logo.png" alt="Logo Janus" class="logo">
+        <h1>Janus</h1>
+    </header>
+
+    <nav>
+        <ul class="navbar" id="navbar">
+            <li><a href="index.html"><img src="img/task.png"></a></li>
+            <li><a href="index.html"><img src="img/pomodoro.png" alt="Pomodoro"></a></li>
+            <li><a href="index.html"><img src="img/matrix.png"></a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="forms-wrapper">
+
+            <!-- Criar Categoria -->
+            <div class="form-card horizontal-form">
+                <h2>Criar Categoria</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" placeholder="Nome da Categoria" id="cat_nome">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Descrição da Categoria" id="cat_desc">
+                    </div>
+                    <div class="form-group">
+                        <button id="btn_cat" class="btn-primary">Criar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Criar Tarefa -->
+            <div class="form-card horizontal-form">
+                <h2>Criar Tarefa</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dt_fim">Titulo</label>
+                        <input type="text" placeholder="Nome da Tarefa" id="task_titulo">
+                    </div>
+                    <div class="form-group">
+                        <label for="dt_fim">Dexcrição</label>
+                        <input type="text" placeholder="Descrição da Tarefa" id="task_desc">
+                    </div>
+                    <div class="form-group">
+                        <label for="dt_fim">Prioridade</label>
+                        <select id="prioridade" name="prioridade">
+                            <option value="BAIXA">Baixa</option>
+                            <option value="MEDIA">Média</option>
+                            <option value="ALTA">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dt_ini">Início</label>
+                        <input type="date" id="dt_ini">
+                    </div>
+                    <div class="form-group">
+                        <label for="dt_fim">Fim</label>
+                        <input type="date" id="dt_fim">
+                    </div>
+                    <div class="form-group">
+                        <label for="task_categoria">Categoria</label>
+                        <select id="task_categoria">
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button id="btn_task" class="btn-primary">Criar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de tarefas -->
+        <div id="task-list" class="task-grid">
+
+        </div>
+    </main>
+
+
+
+</div>
+</body>
+
+<script src="criar.js"></script>
+<script src="task.js"></script>
+
+</html>

@@ -32,5 +32,3 @@
 //filtro//
 
 - listar todos as categorias;               (x) //talvez seja inutil
-- buscar uma categoria                      ( )
--

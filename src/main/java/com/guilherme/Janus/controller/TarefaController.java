@@ -2,10 +2,7 @@ package com.guilherme.Janus.controller;
 
 import com.guilherme.Janus.dto.FiltroTarefaDto;
 import com.guilherme.Janus.dto.TarefaDto;
-import com.guilherme.Janus.model.CategoriaTarefa;
 import com.guilherme.Janus.model.Tarefa;
-import com.guilherme.Janus.model.enums.Prioridade;
-import com.guilherme.Janus.model.enums.Status;
 import com.guilherme.Janus.service.TarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -74,5 +71,4 @@ public class TarefaController {
                 dto.getStatusSelec()
         );
     }
-
 }
