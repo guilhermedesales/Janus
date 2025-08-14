@@ -43,6 +43,7 @@ class TarefaRepositoryTest {
         em.persist(tarefa2);
 
         em.flush();
+        em.clear();
 
         List<Tarefa> tarefas = repository.findByCategoriaId(categoria.getId());
 
@@ -75,6 +76,7 @@ class TarefaRepositoryTest {
         em.persist(tarefa2);
 
         em.flush();
+        em.clear();
 
         List<Tarefa> tarefas = repository.filtroDeBusca(
                Prioridade.BAIXA,
@@ -90,21 +92,34 @@ class TarefaRepositoryTest {
     @Test
     void deveAtualizarStatusParaAtrasado(){
 
-        LocalDate hoje = LocalDate.now();
+        LocalDate hoje = LocalDate.of(2025, 8, 14);
 
-        Tarefa tarefa1 = new Tarefa();
+        Tarefa tarefa1 = new Tarefa(); // caso 1: tarefa no prazo
         tarefa1.setTitulo("Tarefa 1");
         tarefa1.setDt_fim(LocalDate.parse("2025-08-16"));
         tarefa1.setStatus(Status.EM_ANDAMENTO);
         em.persist(tarefa1);
 
-        Tarefa tarefa2 = new Tarefa();
+        Tarefa tarefa2 = new Tarefa(); // caso 2: tarefa ainda sem o status de atrasado
         tarefa2.setTitulo("Tarefa 2");
         tarefa2.setDt_fim(LocalDate.parse("2025-08-13"));
         tarefa2.setStatus(Status.EM_ANDAMENTO);
         em.persist(tarefa2);
 
+        Tarefa tarefa3 = new Tarefa(); // caso 3: tarefa concluida
+        tarefa3.setTitulo("Tarefa 3");
+        tarefa3.setDt_fim(LocalDate.parse("2025-08-11"));
+        tarefa3.setStatus(Status.CONCLUIDO);
+        em.persist(tarefa3);
+
+        Tarefa tarefa4 = new Tarefa(); // caso 4: tarefa já atrasada
+        tarefa4.setTitulo("Tarefa 4");
+        tarefa4.setDt_fim(LocalDate.parse("2025-08-12"));
+        tarefa4.setStatus(Status.ATRASADO);
+        em.persist(tarefa4);
+
         em.flush();
+        em.clear();
 
         int atualizadas = repository.atualizarStatusAtrasado(
                 Status.ATRASADO,
