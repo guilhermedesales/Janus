@@ -19,7 +19,7 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
     List<Tarefa>findByCategoriaId(Long categoriaId); // findBy (palavra chave do Jpa), categoriaId (junção do categoria q vem do Tarefa e o Id q vem do categoria)
 
     // atualiza o status de todas as tarefas atrasadas
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query("Update Tarefa t set t.status = :novoStatus where t.dt_fim < :hoje and t.status = :statusAtual")
     int atualizarStatusAtrasado(@Param("novoStatus") Status novoStatus,
