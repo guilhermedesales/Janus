@@ -12,7 +12,6 @@ public class TarefaDto {
 
     private String titulo;
     private String desc;
-
     private Prioridade prioridade;
     private LocalDate dt_ini;
     private LocalDate dt_fim;
