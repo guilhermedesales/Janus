@@ -3,10 +3,12 @@ package com.guilherme.Janus.service;
 import com.guilherme.Janus.dto.TarefaDto;
 import com.guilherme.Janus.model.CategoriaTarefa;
 import com.guilherme.Janus.model.Tarefa;
+import com.guilherme.Janus.model.Usuario;
 import com.guilherme.Janus.model.enums.Prioridade;
 import com.guilherme.Janus.model.enums.Status;
 import com.guilherme.Janus.repository.CategoriaTarefaRepository;
 import com.guilherme.Janus.repository.TarefaRepository;
+import com.guilherme.Janus.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,13 +29,16 @@ public class TarefaService {
 
     private final CategoriaTarefaRepository categoriaTarefaRepository;
 
-    public TarefaService(TarefaRepository tarefaRepository, CategoriaTarefaRepository categoriaTarefaRepository){
+    private final UsuarioRepository usuarioRepository;
+
+    public TarefaService(TarefaRepository tarefaRepository, CategoriaTarefaRepository categoriaTarefaRepository, UsuarioRepository usuarioRepository) {
         this.tarefaRepository = tarefaRepository;
         this.categoriaTarefaRepository = categoriaTarefaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     // criar tarefa nova
-    public Tarefa salvarTarefa(TarefaDto dto){
+    public Tarefa salvarTarefa(String email, TarefaDto dto){
 
         Tarefa tarefa= new Tarefa();
 
@@ -52,10 +57,14 @@ public class TarefaService {
             tarefa.setCategoria(null);
         }
 
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+        tarefa.setUsuario(usuario);
+
         return tarefaRepository.save(tarefa);
     }
 
-    // pra fazilitar o teste no postman
+    // pra facilitar o teste no postman
     public List<Tarefa> salvarVariasTarefas(List<TarefaDto> dtos) {
         List<Tarefa> tarefas = new ArrayList<>();
 
@@ -84,19 +93,19 @@ public class TarefaService {
 
 
     // lista todas as tarefas
-    public List<Tarefa> listarTarefas(){
-        return tarefaRepository.findAll();
+    public List<Tarefa> listarTarefas(String email){
+        return tarefaRepository.findByUsuarioEmail(email);
     }
 
     // listar as tarefas de uma categoria (usa o id)
-    public List<Tarefa> listarTarefasCategoria(Long id){
-        return tarefaRepository.findByCategoriaId(id);
+    public List<Tarefa> listarTarefasCategoria(String email, Long id){
+        return tarefaRepository.findByCategoriaIdAndUsuarioEmail(id, email);
     }
 
     // editar tarefa (usa o id)
-    public Tarefa atualizarTarefa(Long id, Tarefa tarefaAtualizada){
+    public Tarefa atualizarTarefa(Long id, Tarefa tarefaAtualizada, String email){
 
-        Tarefa tarefaExistente = tarefaRepository.findById(id)
+        Tarefa tarefaExistente = tarefaRepository.findByIdAndUsuarioEmail(id, email)
                 .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
 
         tarefaExistente.setTitulo(tarefaAtualizada.getTitulo());
@@ -110,11 +119,11 @@ public class TarefaService {
     }
 
     // deleta uma tarefa (usa o id)
-    public void deletarTarefa(Long id){
-        if (!tarefaRepository.existsById(id)){
-            throw new RuntimeException("Tarefa não encontrada");
-        }
-        tarefaRepository.deleteById(id);
+    public void deletarTarefa(Long id, String email){
+        Tarefa tarefa = tarefaRepository.findByIdAndUsuarioEmail(id, email)
+                        .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
+
+        tarefaRepository.delete(tarefa);
     }
 
     // atualiza o status das tarefas pra atrasado (se a data de fim estiver antes da data de hoje)
@@ -125,9 +134,9 @@ public class TarefaService {
     }
 
     // atualiza o status pra concluido
-    public Tarefa atualizarStatusConcluido(Long id){
+    public Tarefa atualizarStatusConcluido(Long id, String email){
 
-        Tarefa tarefaExistente = tarefaRepository.findById(id)
+        Tarefa tarefaExistente = tarefaRepository.findByIdAndUsuarioEmail(id, email)
                 .orElseThrow(() -> new RuntimeException("Tarefa não Encontrado"));
 
         if (!(tarefaExistente.getStatus() == CONCLUIDO)){
@@ -139,7 +148,7 @@ public class TarefaService {
     }
 
     // filtro de busca
-    public List<Tarefa> filtroDeBusca(CategoriaTarefa categoriaTarefa, Prioridade prioridade, String tipoData, List<Status> statusSelec){
+    public List<Tarefa> filtroDeBusca(String email, CategoriaTarefa categoriaTarefa, Prioridade prioridade, String tipoData, List<Status> statusSelec){
 
         LocalDate hoje = LocalDate.now();
         LocalDate dataInicio = null;
@@ -158,7 +167,7 @@ public class TarefaService {
             dataFim = hoje.withDayOfMonth(hoje.lengthOfMonth());
         }
 
-        return tarefaRepository.filtroDeBusca(prioridade,categoriaTarefa, dataInicio, dataFim,
+        return tarefaRepository.filtroDeBusca(email, prioridade,categoriaTarefa, dataInicio, dataFim,
                 statusSelec == null || statusSelec.isEmpty() ? null : statusSelec);
 
     }

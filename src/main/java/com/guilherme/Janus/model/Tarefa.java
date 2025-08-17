@@ -15,8 +15,11 @@ import java.time.LocalDate;
 public class Tarefa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    private Usuario usuario;
 
     private String titulo;
     private String desc;
@@ -43,8 +46,9 @@ public class Tarefa {
 
     public Tarefa(){}
 
-    public Tarefa(Long id, String titulo, String desc, Status status, Prioridade prioridade, LocalDate dt_ini, LocalDate dt_fim, CategoriaTarefa categoria, MatrizEisenhower matriz) {
+    public Tarefa(Long id, Usuario usuario,String titulo, String desc, Status status, Prioridade prioridade, LocalDate dt_ini, LocalDate dt_fim, CategoriaTarefa categoria, MatrizEisenhower matriz) {
         this.id = id;
+        this.usuario = usuario;
         this.titulo = titulo;
         this.desc = desc;
         this.status = Status.EM_ANDAMENTO;

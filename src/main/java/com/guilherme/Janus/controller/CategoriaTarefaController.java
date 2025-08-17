@@ -5,6 +5,7 @@ import com.guilherme.Janus.service.CategoriaTarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -20,26 +21,26 @@ public class CategoriaTarefaController {
 
     // cria uma categoria
     @PostMapping("/salvar")
-    public CategoriaTarefa salvarCategoriaTarefa(@RequestBody CategoriaTarefa categoriaTarefa){
-        return categoriaTarefaService.salvarCategoriaTarefa(categoriaTarefa);
+    public CategoriaTarefa salvarCategoriaTarefa(@RequestBody CategoriaTarefa categoriaTarefa, Principal principal){
+        return categoriaTarefaService.salvarCategoriaTarefa( principal.getName(), categoriaTarefa);
     }
 
     // lista todas as categoria
     @GetMapping("/listar")
-    public List<CategoriaTarefa> listarCategoriasTarefa(){
-        return categoriaTarefaService.listarCategoriasTarefa();
+    public List<CategoriaTarefa> listarCategoriasTarefa(Principal principal){
+        return categoriaTarefaService.listarCategoriasTarefa(principal.getName());
     }
 
     // atualiza uma categoria
     @PutMapping("/atualizar")
-    public CategoriaTarefa atualizarCategoriaTarefa(@RequestBody Long id, CategoriaTarefa categoriaTarefaAtualizada){
-        return categoriaTarefaService.atualizarCategoriaTarefa(id, categoriaTarefaAtualizada);
+    public CategoriaTarefa atualizarCategoriaTarefa(@RequestBody Long id, CategoriaTarefa categoriaTarefaAtualizada, Principal principal){
+        return categoriaTarefaService.atualizarCategoriaTarefa(principal.getName(), id, categoriaTarefaAtualizada);
     }
 
     // deleta uma categoria
     @DeleteMapping("/deletar")
-    public void deletarCategoriaTarefa(@RequestBody Long id){
-        categoriaTarefaService.deletarCategoriaTarefa(id);
+    public void deletarCategoriaTarefa(@RequestBody Long id, Principal principal){
+        categoriaTarefaService.deletarCategoriaTarefa(principal.getName(), id);
     }
 
 }

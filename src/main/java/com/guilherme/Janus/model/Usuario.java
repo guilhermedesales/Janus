@@ -1,22 +1,25 @@
 package com.guilherme.Janus.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class CategoriaTarefa {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
-    private String desc;
 
-    @ManyToOne
-    private Usuario usuario;
+    @Column(unique = true)
+    private String email;
+    private String senha;
+
 }
