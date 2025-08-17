@@ -2,6 +2,7 @@ package com.guilherme.Janus.repository;
 
 import com.guilherme.Janus.model.CategoriaTarefa;
 import com.guilherme.Janus.model.Tarefa;
+import com.guilherme.Janus.model.Usuario;
 import com.guilherme.Janus.model.enums.Prioridade;
 import com.guilherme.Janus.model.enums.Status;
 import jakarta.persistence.EntityManager;
@@ -28,26 +29,34 @@ class TarefaRepositoryTest {
     @Test
     void deveListarTarefasPeloIdDaCategoria() {
 
+        Usuario usuario = new Usuario();
+        usuario.setEmail("email.com");
+        usuario.setSenha("1234");
+        em.persist(usuario);
+
         CategoriaTarefa categoria = new CategoriaTarefa();
         categoria.setNome("Trabalhos");
+        categoria.setUsuario(usuario);
         em.persist(categoria);
 
         Tarefa tarefa1 = new Tarefa();
         tarefa1.setTitulo("Tarefa 1");
         tarefa1.setCategoria(categoria);
+        tarefa1.setUsuario(usuario);
         em.persist(tarefa1);
 
         Tarefa tarefa2 = new Tarefa();
         tarefa2.setTitulo("Tarefa 2");
         tarefa2.setCategoria(categoria);
+        tarefa2.setUsuario(usuario);
         em.persist(tarefa2);
 
         em.flush();
         em.clear();
 
-        List<Tarefa> tarefas = repository.findByCategoriaId(categoria.getId());
+        List<Tarefa> tarefas = repository.findByCategoriaIdAndUsuarioEmail(categoria.getId(), usuario.getEmail());
 
-        //assertEquals(2, tarefas.size());
+        assertEquals(2, tarefas.size());
         assertTrue(tarefas.stream().anyMatch(t -> t.getTitulo().equals("Tarefa 1")));
     }
 
@@ -55,12 +64,19 @@ class TarefaRepositoryTest {
     @Test
     void deveListarTarefasDaBusca() {
 
+        Usuario usuario = new Usuario();
+        usuario.setEmail("email.com");
+        usuario.setSenha("1234");
+        em.persist(usuario);
+
         CategoriaTarefa categoria = new CategoriaTarefa();
         categoria.setNome("Provas");
+        categoria.setUsuario(usuario);
         em.persist(categoria);
 
         Tarefa tarefa1 = new Tarefa();
         tarefa1.setTitulo("Tarefa 1");
+        tarefa1.setUsuario(usuario);
         tarefa1.setCategoria(categoria);
         tarefa1.setPrioridade(Prioridade.BAIXA);
         tarefa1.setStatus(Status.ATRASADO);
@@ -69,6 +85,7 @@ class TarefaRepositoryTest {
 
         Tarefa tarefa2 = new Tarefa();
         tarefa2.setTitulo("Tarefa 2");
+        tarefa2.setUsuario(usuario);
         tarefa2.setCategoria(categoria);
         tarefa2.setPrioridade(Prioridade.ALTA);
         tarefa2.setStatus(Status.EM_ANDAMENTO);
@@ -79,7 +96,8 @@ class TarefaRepositoryTest {
         em.clear();
 
         List<Tarefa> tarefas = repository.filtroDeBusca(
-               Prioridade.BAIXA,
+               usuario.getEmail(),
+                Prioridade.BAIXA,
                 categoria,
                 null,
                 null,
