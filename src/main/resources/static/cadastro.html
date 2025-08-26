@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janus - Login / Registro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="img/logo.png" alt="Logo Janus" class="logo">
+        <h1>Janus</h1>
+    </header>
+
+    <main>
+        <div class="forms-wrapper">
+
+            <!-- Login -->
+            <div class="form-card">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <input type="email" id="login_email" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="login_senha" placeholder="Senha">
+                </div>
+                <div class="form-group">
+                    <button id="btn_login" class="btn-primary">Entrar</button>
+                </div>
+                <p id="login_msg" style="color:red;"></p>
+            </div>
+
+            <!-- Registro -->
+            <div class="form-card">
+                <h2>Registrar</h2>
+                <div class="form-group">
+                    <input type="text" id="reg_nome" placeholder="Nome">
+                </div>
+                <div class="form-group">
+                    <input type="email" id="reg_email" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="reg_senha" placeholder="Senha">
+                </div>
+                <div class="form-group">
+                    <button id="btn_reg" class="btn-primary">Registrar</button>
+                </div>
+                <p id="reg_msg" style="color:red;"></p>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    const API_URL = "http://localhost:8080";
+
+    // Login
+    document.getElementById("btn_login").onclick = async () => {
+        const email = document.getElementById("login_email").value;
+        const senha = document.getElementById("login_senha").value;
+        const msg = document.getElementById("login_msg");
+
+        msg.textContent = "";
+
+        try {
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, senha })
+            });
+
+            if (!res.ok) throw new Error("Credenciais inválidas");
+
+            const data = await res.json();
+            localStorage.setItem("jwt", data.token); // salva o token
+            window.location.href = "index.html"; // redireciona para a tela principal
+        } catch (err) {
+            msg.textContent = err.message;
+        }
+    };
+
+    // Registro
+    document.getElementById("btn_reg").onclick = async () => {
+        const nome = document.getElementById("reg_nome").value;
+        const email = document.getElementById("reg_email").value;
+        const senha = document.getElementById("reg_senha").value;
+        const msg = document.getElementById("reg_msg");
+
+        msg.textContent = "";
+
+        try {
+            const res = await fetch(`${API_URL}/usuarios/cadastro`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome, email, senha })
+            });
+
+            if (!res.ok) throw new Error(await res.text());
+
+            msg.style.color = "green";
+            msg.textContent = "Usuário cadastrado com sucesso!";
+        } catch (err) {
+            msg.style.color = "red";
+            msg.textContent = err.message;
+        }
+    };
+</script>
+</body>
+</html>
