@@ -34,4 +34,4 @@
 - listar todos as categorias;               (x) //talvez seja inutil
 
 
-acessar swagger: http://localhost:8080/swagger-ui.html 
+acessar swagger: http://localhost:8080/swagger-ui.html
