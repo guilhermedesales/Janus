@@ -34,8 +34,8 @@ public class TarefaController {
 
     @PostMapping("/salvarVarios")
     @Operation(summary = "Criar várias tarefas", description = "Cria múltiplas tarefas de uma vez")
-    public List<Tarefa> salvarVarios(@RequestBody List<TarefaDto> dto){
-        return tarefaService.salvarVariasTarefas(dto);
+    public List<Tarefa> salvarVarios(@RequestBody List<TarefaDto> dto, String email){
+        return tarefaService.salvarVariasTarefas(dto, email);
     }
 
     // listar todas as tarefas
