@@ -1,5 +1,6 @@
 package com.guilherme.Janus.service;
 
+import com.guilherme.Janus.Mapping.TarefaMapping;
 import com.guilherme.Janus.dto.TarefaDto;
 import com.guilherme.Janus.model.CategoriaTarefa;
 import com.guilherme.Janus.model.Tarefa;
@@ -31,6 +32,9 @@ public class TarefaService {
 
     private final UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private TarefaMapping map;
+
     public TarefaService(TarefaRepository tarefaRepository, CategoriaTarefaRepository categoriaTarefaRepository, UsuarioRepository usuarioRepository) {
         this.tarefaRepository = tarefaRepository;
         this.categoriaTarefaRepository = categoriaTarefaRepository;
@@ -40,14 +44,7 @@ public class TarefaService {
     // criar tarefa nova
     public Tarefa salvarTarefa(String email, TarefaDto dto){
 
-        Tarefa tarefa= new Tarefa();
-
-        tarefa.setTitulo(dto.getTitulo());
-        tarefa.setDesc(dto.getDesc());
-        tarefa.setPrioridade(dto.getPrioridade());
-        tarefa.setStatus(Status.EM_ANDAMENTO);
-        tarefa.setDt_ini(dto.getDt_ini());
-        tarefa.setDt_fim(dto.getDt_fim());
+        Tarefa tarefa = map.toEntity(dto);
 
         if (dto.getCategoriaId() != null) {
             CategoriaTarefa categoriaId = categoriaTarefaRepository.findById(dto.getCategoriaId())
@@ -65,26 +62,24 @@ public class TarefaService {
     }
 
     // pra facilitar o teste no postman
-    public List<Tarefa> salvarVariasTarefas(List<TarefaDto> dtos) {
+    public List<Tarefa> salvarVariasTarefas(List<TarefaDto> dtos, String email) {
         List<Tarefa> tarefas = new ArrayList<>();
 
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
         for (TarefaDto dto : dtos) {
-            Tarefa tarefa = new Tarefa();
-            tarefa.setTitulo(dto.getTitulo());
-            tarefa.setDesc(dto.getDesc());
-            tarefa.setPrioridade(dto.getPrioridade());
-            tarefa.setStatus(Status.EM_ANDAMENTO);
-            tarefa.setDt_ini(dto.getDt_ini());
-            tarefa.setDt_fim(dto.getDt_fim());
+            Tarefa tarefa = map.toEntity(dto);
 
             if (dto.getCategoriaId() != null) {
-                CategoriaTarefa categoriaId = categoriaTarefaRepository.findById(dto.getCategoriaId())
-                        .orElseThrow();
-                tarefa.setCategoria(categoriaId);
+                CategoriaTarefa categoria = categoriaTarefaRepository.findById(dto.getCategoriaId())
+                        .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                tarefa.setCategoria(categoria);
             } else {
                 tarefa.setCategoria(null);
             }
 
+            tarefa.setUsuario(usuario);
             tarefas.add(tarefa);
         }
 
