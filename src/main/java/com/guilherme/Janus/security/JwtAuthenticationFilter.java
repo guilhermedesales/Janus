@@ -1,11 +1,14 @@
 package com.guilherme.Janus.security;
 
+import com.guilherme.Janus.Application.Service.UsersDetailsServiceImpl;
 import com.guilherme.Janus.security.JwtUtil;
-import com.guilherme.Janus.service.UsersDetailsServiceImpl;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +22,8 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    // private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -31,7 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (path.startsWith("/usuarios/cadastro") || path.startsWith("/auth/login") || path.startsWith("/h2-console")) {
+        // logger.info("JwtAuthenticationFilter - Processing path: {}", path);
+        
+        // Endpoints públicos que não requerem JWT
+        if (path.startsWith("/usuarios/cadastro") || 
+            path.startsWith("/auth/login") || 
+            path.startsWith("/h2-console") ||
+            path.startsWith("/swagger-ui") ||
+            path.startsWith("/v3/api-docs") ||
+            path.startsWith("/swagger")) {
+            // logger.info("Public path detected - bypassing JWT validation for: {}", path);
             filterChain.doFilter(request, response);
             return;
         }

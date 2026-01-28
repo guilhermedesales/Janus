@@ -2,6 +2,7 @@ package com.guilherme.Janus.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "minhaChaveSuperSecretaDeAutenticacaoJWT1234!"; // tem q ter 32 caracteres
+    @Value("${jwt.secret}")
+    private String SECRET;
+    
     private final long EXPIRATION = 86400000;
 
     public String gerarToken(UserDetails userDetails){

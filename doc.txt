@@ -35,3 +35,12 @@
 
 
 acessar swagger: http://localhost:8080/swagger-ui.html
+
+// arrumar //
+
+- usar dto pra categoria
+- arrumar auth de tarefas
+
+--- v2 (refatoração geral do proj) ---
+
+- criar endpoint de buscar tarefas por categoria usando o id da categoria

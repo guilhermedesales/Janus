@@ -1,7 +1,8 @@
 package com.guilherme.Janus.config;
 
+import com.guilherme.Janus.Application.Service.UsersDetailsServiceImpl;
 import com.guilherme.Janus.security.JwtAuthenticationFilter;
-import com.guilherme.Janus.service.UsersDetailsServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,16 +36,17 @@ public class securityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/usuarios/cadastro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/login.html", "/cadastro.html", "/style.css", "/task.js", "/criar.js", "/img/**").permitAll()
-                        .requestMatchers("/usuarios/cadastro").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/swagger/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -72,8 +74,10 @@ public class securityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:63342")
-                        .allowedMethods("*");
+                        .allowedOrigins("http://localhost:63342", "http://localhost:8080")
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
