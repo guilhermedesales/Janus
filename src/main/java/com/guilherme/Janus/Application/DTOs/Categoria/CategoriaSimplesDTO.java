@@ -9,5 +9,7 @@ public class CategoriaSimplesDTO {
     public UUID id;
     public String nome;
     public String desc;
+    public String icon;
+    public String cor;
     //public List<CriarTarefaDto> tarefas;
 }

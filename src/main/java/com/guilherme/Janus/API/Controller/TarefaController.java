@@ -58,20 +58,24 @@ public class TarefaController {
     // listar tarefas de uma categoria
     @GetMapping("/listarTarefaCategoria/{id}")
     @Operation(summary = "Listar tarefas por categoria", description = "Lista todas as tarefas de uma categoria específica")
-    public List<Tarefa> listarTarefasCategoria(
-            @Parameter(description = "ID da categoria") @PathVariable UUID id,
+    public List<TarefaDTO> listarTarefasCategoria(
+            @Parameter(description = "ID da categoria")
+            @PathVariable UUID id,
             Principal principal){
-        return tarefaService.listarTarefasCategoria(principal.getName(), id);
+        List<Tarefa> tarefas = tarefaService.listarTarefasCategoria(principal.getName(), id);
+
+        return mapping.toTarefaDTOList(tarefas);
     }
 
     // atualizar tarefa
     @PutMapping("/atualizar/{id}")
     @Operation(summary = "Atualizar tarefa", description = "Atualiza os dados de uma tarefa existente")
-    public Tarefa atualizarTarefa(
-            @Parameter(description = "ID da tarefa") @PathVariable UUID id,
-            @RequestBody Tarefa tarefaAtualizada,
-            Principal principal){
-        return tarefaService.atualizarTarefa(id, tarefaAtualizada, principal.getName());
+    public CriarTarefaDto atualizarTarefa(
+            @Parameter(description = "ID da tarefa")
+            @PathVariable UUID id,
+            @RequestBody CriarTarefaDto dto, Principal principal){
+        Tarefa tarefa = tarefaService.atualizarTarefa(id, dto, principal.getName());
+        return mapping.toDto(tarefa);
     }
 
     // deletar tarefa
@@ -84,8 +88,11 @@ public class TarefaController {
     // atualizar status pra concluido
     @PatchMapping("/concluir/{id}")
     @Operation(summary = "Concluir tarefa", description = "Marca uma tarefa como concluída")
-    public Tarefa atualizarStatusConcluido(@Parameter(description = "ID da tarefa") @PathVariable UUID id, Principal principal){
-        return tarefaService.atualizarStatusConcluido(id, principal.getName());
+    public TarefaDTO atualizarStatusConcluido(
+            @Parameter(description = "ID da tarefa")
+            @PathVariable UUID id, Principal principal){
+        Tarefa tarefa = tarefaService.atualizarStatusConcluido(id, principal.getName());
+        return mapping.toTarefaDTO(tarefa);
     }
 
     // // filtro de busca

@@ -6,6 +6,7 @@ import com.guilherme.Janus.Application.DTOs.Categoria.CriarCategoriaDTO;
 import com.guilherme.Janus.Data.Repositories.CategoriaRepository;
 import com.guilherme.Janus.Data.Repositories.UsuarioRepository;
 
+import com.guilherme.Janus.Domain.enums.Status;
 import org.springframework.stereotype.Service;
 
 import com.guilherme.Janus.Application.Mapping.EntityMapper;
@@ -53,7 +54,7 @@ public class CategoriaService {
     }
 
     // atualiza uma categoria
-    public Categoria atualizarCategoria(String email, UUID id, Categoria categoriaAtualizado){
+    public Categoria atualizarCategoria(String email, UUID id, CriarCategoriaDTO dto){
 
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
@@ -61,8 +62,10 @@ public class CategoriaService {
         Categoria categoriaExistente = categoriaRepository.findByIdAndUsuarioEmail(id, email)
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
-        categoriaExistente.setNome(categoriaAtualizado.getNome());
-        categoriaExistente.setDesc(categoriaAtualizado.getDesc());
+        categoriaExistente.setNome(dto.getNome());
+        categoriaExistente.setDesc(dto.getDesc());
+        categoriaExistente.setIcon(dto.getIcon());
+        categoriaExistente.setCor(dto.getIcon());
 
         return categoriaRepository.save(categoriaExistente);
     }

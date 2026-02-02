@@ -16,4 +16,5 @@ public interface CategoriaRepository extends JpaRepository<Categoria, UUID> {
     List<Categoria> findByUsuario(Usuario usuario);
 
     Optional<Categoria> findByIdAndUsuarioEmail(UUID id, String email);
+
 }
