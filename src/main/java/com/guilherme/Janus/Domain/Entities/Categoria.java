@@ -1,15 +1,13 @@
 package com.guilherme.Janus.Domain.Entities;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
 //import lombok.*;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
 @Entity
 public class Categoria {
 
@@ -19,6 +17,8 @@ public class Categoria {
 
     private String nome;
     private String desc;
+    private String icon; // lucid icon
+    private String cor; // cor hexa
 
     @ManyToOne
     private Usuario usuario;
@@ -26,13 +26,18 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     private List<Tarefa> tarefas; // uma tarefa tem uma categoria e uma categoria pode ter muitas tarefas
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
     public Categoria(){}
 
     // construtor
-    public Categoria(String nome, String desc, Usuario usuario) {
+    public Categoria(String nome, String desc, String icon, String cor, Usuario usuario) {
         this.nome = nome;
         this.desc = desc;
         this.usuario = usuario;
+        this.icon = icon;
+        this.cor = cor;
     }
 
     // @PrePersist
@@ -59,6 +64,12 @@ public class Categoria {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    public String getIcon() {return icon;}
+    public void setIcon(String icon) {this.icon = icon;}
+
+    public String getCor() {return cor;}
+    public void setCor(String cor) {this.cor = cor;}
 
     //get e set usuario
     public Usuario getUsuario() {

@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 //import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 //@Getter
@@ -47,6 +48,9 @@ public class Tarefa {
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private MatrizEisenhower matriz;
+
+    private LocalDateTime CreatedAt;
+    private LocalDateTime UpdatedAt;
 
     public Tarefa(){}
 

@@ -28,13 +28,13 @@ import java.util.UUID;
 public class TarefaService {
 
     private final TarefaRepository tarefaRepository;
-    private final CategoriaRepository categoriaTarefaRepository;
+    private final CategoriaRepository categoriaRepository;
     private final UsuarioRepository usuarioRepository;
     private final EntityMapper mapping;
 
-    public TarefaService(TarefaRepository tarefaRepository, CategoriaRepository categoriaTarefaRepository, UsuarioRepository usuarioRepository, EntityMapper mapping) {
+    public TarefaService(TarefaRepository tarefaRepository, CategoriaRepository categoriaRepository, UsuarioRepository usuarioRepository, EntityMapper mapping) {
         this.tarefaRepository = tarefaRepository;
-        this.categoriaTarefaRepository = categoriaTarefaRepository;
+        this.categoriaRepository = categoriaRepository;
         this.usuarioRepository = usuarioRepository;
         this.mapping = mapping;
     }
@@ -50,7 +50,7 @@ public class TarefaService {
 
 
         if (dto.getCategoriaId() != null) {
-            Categoria categoriaId = categoriaTarefaRepository.findById(dto.getCategoriaId())
+            Categoria categoriaId = categoriaRepository.findById(dto.getCategoriaId())
                     .orElseThrow();
             tarefa.setCategoria(categoriaId);
         } else{
@@ -60,6 +60,8 @@ public class TarefaService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
         tarefa.setUsuario(usuario);
+
+        tarefa.setStatus(Status.EM_ANDAMENTO); // default = em andamento
 
         return tarefaRepository.save(tarefa);
     
@@ -76,7 +78,7 @@ public class TarefaService {
             Tarefa tarefa = mapping.toEntity(dto);
 
             if (dto.getCategoriaId() != null) {
-                Categoria categoria = categoriaTarefaRepository.findById(dto.getCategoriaId())
+                Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
                         .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
                 tarefa.setCategoria(categoria);
             } else {
@@ -102,17 +104,22 @@ public class TarefaService {
     }
 
     // editar tarefa (usa o id)
-    public Tarefa atualizarTarefa(UUID id, Tarefa tarefaAtualizada, String email){
+    public Tarefa atualizarTarefa(UUID id, CriarTarefaDto dto, String email){
 
         Tarefa tarefaExistente = tarefaRepository.findByIdAndUsuarioEmail(id, email)
                 .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
 
-        tarefaExistente.setTitulo(tarefaAtualizada.getTitulo());
-        tarefaExistente.setCategoria(tarefaAtualizada.getCategoria());
-        tarefaExistente.setDesc(tarefaAtualizada.getDesc());
-        tarefaExistente.setPrioridade(tarefaAtualizada.getPrioridade());
-        tarefaExistente.setDt_ini(tarefaAtualizada.getDt_ini());
-        tarefaExistente.setDt_fim(tarefaAtualizada.getDt_fim());
+        tarefaExistente.setTitulo(dto.getTitulo());
+        tarefaExistente.setDesc(dto.getDesc());
+        tarefaExistente.setPrioridade(dto.getPrioridade());
+        tarefaExistente.setDt_ini(dto.getDt_ini());
+        tarefaExistente.setDt_fim(dto.getDt_fim());
+
+        Categoria categoria = categoriaRepository
+                .findById(dto.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        tarefaExistente.setCategoria(categoria);
 
         return tarefaRepository.save(tarefaExistente);
     }
