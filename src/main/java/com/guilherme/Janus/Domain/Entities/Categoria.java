@@ -1,7 +1,6 @@
 package com.guilherme.Janus.Domain.Entities;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +15,7 @@ public class Categoria {
     private UUID id;
 
     private String nome;
+    @Column(name = "descricao")
     private String desc;
     private String icon; // lucid icon
     private String cor; // cor hexa

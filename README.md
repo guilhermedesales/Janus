@@ -1,109 +1,63 @@
-# Janus - Gerenciador de Tarefas
+# Janus - Backend
 
-Janus é um projeto em desenvolvimento com Spring Boot que propõe uma solução completa para organização pessoal e cuidado emocional, oferecendo duas interfaces integradas: produtividade/foco e saúde mental.
+API de tarefas, categorias e dashboard do projeto Janus.
 
-## > Proposta
+## Status da migracao
 
-#### Inspirado no deus romano Janus (guardião de começos e transições), o app busca oferecer equilíbrio entre organização e bem-estar mental, unindo:
+- Login, senha e autorizacao local foram removidos do Janus.
+- A autenticacao vem da Auth API externa via JWT.
+- O backend valida JWT localmente com HS256 (`JWT_SECRET`).
+- O backend valida `sistemaId` do token (`SYSTEM_ID`).
 
-Uma interface para foco, estudos e produtividade (tarefas, categorias, prazos, etc.)
+## Contrato JWT esperado
 
-Uma interface para suporte emocional, com recursos voltados ao autocuidado, descompressão e rotina saudável
+Claims usadas pelo Janus:
 
-## > Status do Projeto
+- `sub` (UUID): identificador principal do usuario
+- `email`: email do usuario
+- `nome`: nome de exibicao
+- `permissions`: permissoes no formato `recurso:acao`
+- `authorities`: authorities adicionais (opcional)
+- `sistemaId`: id do sistema alvo
+- `exp`: expiracao
 
-Em desenvolvimento, backend já com:
+## Regras de seguranca
 
-- Spring Security e JWT implementados
+- Header obrigatorio: `Authorization: Bearer <token>`
+- Se token invalido/expirado: `401 Unauthorized`
+- Sem refresh no backend (refresh e responsabilidade do front + Auth API)
+- Permissoes aplicadas com `@PreAuthorize` (ex.: `hasAuthority('tarefa:view')`)
 
-- DTOs para transferência de dados entre front-end e backend
+## Variaveis de ambiente
 
-- Configurações centralizadas (CORS, Swagger, SecurityConfig)
+- `JWT_SECRET`: mesmo segredo usado para assinar token na Auth API
+- `SYSTEM_ID`: id do sistema que deve bater com `JWT.sistemaId`
+- `DB_URL`, `DB_USER`, `DB_PASSWORD`: conexao do banco
+- `APP_CORS_ALLOWED_ORIGINS`: origens permitidas no CORS
 
-- Swagger UI funcionando para documentação e testes de API
+## Rodando com Docker Compose
 
-## > Tecnologias utilizadas
+```powershell
+docker compose up -d --build
+docker compose logs -f janus-app
+```
 
-- Java 17+
+Para parar:
 
-- Spring Boot
+```powershell
+docker compose down
+```
 
-- Maven
+Se mudou `POSTGRES_USER`/`POSTGRES_PASSWORD` e o volume antigo ficou com credenciais antigas, recrie o volume:
 
-- JPA/Hibernate
+```powershell
+docker compose down -v
+docker compose up -d --build
+```
 
-- Banco de dados:
+## Endpoints
 
-  - Durante o desenvolvimento: H2
+- Swagger UI: `http://localhost:5000/swagger`
+- Perfil autenticado: `GET /usuarios/me`
+- Endpoints de negocio (`/tarefas`, `/categorias`, `/dash`) exigem token valido
 
-  - Em Produção: PostgreSQL
-
-- IDE: IntelliJ
-
-- Documentação de API: Swagger / OpenAPI 3
-
-- Testes: Junit e Mockito
-
-## > Funcionalidades Implementadas
-### >> Backend / API
-
-- CRUD de tarefas e categorias
-
-- Cadastro e login de usuários com JWT
-
-- Endpoints protegidos por Spring Security
-
-- Conclusão de tarefas e atualização automática de status para atrasado
-
-- Filtro de busca avançado de tarefas por categoria, prioridade, datas, prioridade e status
-
-- DTOs para entrada/saída de dados
-
-- Documentação de API com Swagger UI
-
-## > Funcionalidades Planejadas
-### >> Módulo de Produtividade
-
-- Pomodoro Timer
-
-- Matriz de Eisenhower
-
-- Visualização e cadastro de tarefas via frontend
-
-### >> Módulo de Saúde Mental (Health Mind)
-
-- Frases motivacionais e mensagens positivas
-
-- Exercícios de respiração / relaxamento
-
-- Diário emocional simples
-
-- Sugestões de pausas e autocuidado
-
-- Integração com sons relaxantes ou vídeos (links ou embeds)
-
-## > Estrutura do Projeto
-
-`model/` - Entidades principais (tabelas do banco)
-
-`dto/` - Objetos de transferência de dados entre front e back
-
-`controller/` - Endpoints REST (camada de entrada)
-
-`repository/` - Interfaces JPA para acesso aos dados
-
-`service/` - Regras de negócio e lógica da aplicação
-
-`config/` - Configurações de CORS, Swagger, Spring Security
-
-`security/` - JWT e configurações de autenticação
-
-## > Futuras funcionalidades
-
-- Frontend completo integrado com backend
-
-- Técnicas de organização e produtividade (Pomodoro, Eisenhower, calendário)
-
-- Módulo Health Mind completo
-
-- Features de acessibilidade

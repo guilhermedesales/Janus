@@ -44,3 +44,7 @@ acessar swagger: http://localhost:8080/swagger-ui.html
 --- v2 (refatoração geral do proj) ---
 
 - criar endpoint de buscar tarefas por categoria usando o id da categoria
+
+
+---- v3 (usando a api de auth pra lidar com a parte de autenticação) ---
+
