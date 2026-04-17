@@ -27,6 +27,7 @@ public class Tarefa {
     private Usuario usuario;
 
     private String titulo;
+    @Column(name = "descricao")
     private String desc;
 
     @Enumerated(EnumType.STRING)

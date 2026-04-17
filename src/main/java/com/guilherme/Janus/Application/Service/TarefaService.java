@@ -9,7 +9,6 @@ import com.guilherme.Janus.Domain.enums.Prioridade;
 import com.guilherme.Janus.Domain.enums.Status;
 import com.guilherme.Janus.Data.Repositories.CategoriaRepository;
 import com.guilherme.Janus.Data.Repositories.TarefaRepository;
-import com.guilherme.Janus.Data.Repositories.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -29,13 +28,13 @@ public class TarefaService {
 
     private final TarefaRepository tarefaRepository;
     private final CategoriaRepository categoriaRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioIdentityService usuarioIdentityService;
     private final EntityMapper mapping;
 
-    public TarefaService(TarefaRepository tarefaRepository, CategoriaRepository categoriaRepository, UsuarioRepository usuarioRepository, EntityMapper mapping) {
+    public TarefaService(TarefaRepository tarefaRepository, CategoriaRepository categoriaRepository, UsuarioIdentityService usuarioIdentityService, EntityMapper mapping) {
         this.tarefaRepository = tarefaRepository;
         this.categoriaRepository = categoriaRepository;
-        this.usuarioRepository = usuarioRepository;
+        this.usuarioIdentityService = usuarioIdentityService;
         this.mapping = mapping;
     }
 
@@ -57,8 +56,7 @@ public class TarefaService {
             tarefa.setCategoria(null);
         }
 
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+        Usuario usuario = usuarioIdentityService.buscarPorEmailOuErro(email);
         tarefa.setUsuario(usuario);
 
         tarefa.setStatus(Status.EM_ANDAMENTO); // default = em andamento
@@ -71,8 +69,7 @@ public class TarefaService {
     public List<Tarefa> salvarVariasTarefas(List<CriarTarefaDto> dtos, String email) {
         List<Tarefa> tarefas = new ArrayList<>();
 
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Usuario usuario = usuarioIdentityService.buscarPorEmailOuErro(email);
 
         for (CriarTarefaDto dto : dtos) {
             Tarefa tarefa = mapping.toEntity(dto);
@@ -95,16 +92,19 @@ public class TarefaService {
 
     // lista todas as tarefas
     public List<Tarefa> listarTarefas(String email){
+        usuarioIdentityService.buscarPorEmailOuErro(email);
         return tarefaRepository.findByUsuarioEmail(email);
     }
 
     // listar as tarefas de uma categoria (usa o id)
     public List<Tarefa> listarTarefasCategoria(String email, UUID id){
+        usuarioIdentityService.buscarPorEmailOuErro(email);
         return tarefaRepository.findByCategoriaIdAndUsuarioEmail(id, email);
     }
 
     // editar tarefa (usa o id)
     public Tarefa atualizarTarefa(UUID id, CriarTarefaDto dto, String email){
+        usuarioIdentityService.buscarPorEmailOuErro(email);
 
         Tarefa tarefaExistente = tarefaRepository.findByIdAndUsuarioEmail(id, email)
                 .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
@@ -126,6 +126,7 @@ public class TarefaService {
 
     // deleta uma tarefa (usa o id)
     public void deletarTarefa(UUID id, String email){
+        usuarioIdentityService.buscarPorEmailOuErro(email);
         Tarefa tarefa = tarefaRepository.findByIdAndUsuarioEmail(id, email)
                         .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
 
@@ -141,6 +142,7 @@ public class TarefaService {
 
     // atualiza o status pra concluido
     public Tarefa atualizarStatusConcluido(UUID id, String email){
+        usuarioIdentityService.buscarPorEmailOuErro(email);
 
         Tarefa tarefaExistente = tarefaRepository.findByIdAndUsuarioEmail(id, email)
                 .orElseThrow(() -> new RuntimeException("Tarefa não Encontrado"));
@@ -155,6 +157,7 @@ public class TarefaService {
 
     // filtro de busca
     public List<Tarefa> filtroDeBusca(String email, Categoria categoriaTarefa, Prioridade prioridade, String tipoData, List<Status> statusSelec){
+        usuarioIdentityService.buscarPorEmailOuErro(email);
 
         LocalDate hoje = LocalDate.now();
         LocalDate dataInicio = null;
